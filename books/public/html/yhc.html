@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(../images/2.jpg);
+        }
+
+        #home {
+            z-index: 999;
+        }
+
+        #home>table {
+            width: 100%;
+        }
+
+        td {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 60px;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>aaaa哇啊大声道啊</h1> -->
+    <nav class="navbar navbar-default" style="background: salmon;">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">管理员界面</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="font-size: 26px;" class="name"><a href="#">xxx</a></li>
+                    <li><a href="/">欢迎登陆,退出</a></li>
+
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+
+    </nav>
+    <!-- <div class="table-responsive container"></div> -->
+
+
+    <div class="container" style="background: #fff;">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                    data-toggle="tab">已有书籍</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">新增书籍</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home"></div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <form action="/into">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">书名</label>
+                        <input name="name" class="form-control" id="exampleInputEmail1" placeholder="书名">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">作者</label>
+                        <input name="zuozhe" class="form-control" id="exampleInputPassword1" placeholder="作者">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">数量</label>
+                        <input name="count" class="form-control" id="exampleInputPassword1" placeholder="数量">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">单价</label>
+                        <input name="price" class="form-control" id="exampleInputPassword1" placeholder="单价">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">简介</label>
+                        <input name="jianjie" class="form-control" id="exampleInputPassword1" placeholder="简介">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">内容</label>
+                        <input name="content" class="form-control" id="exampleInputPassword1" placeholder="内容">
+                    </div>
+                    <button type="submit" class="btn btn-default">提交</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/jquery-1.11.3.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $.get("/gsj", (data) => {
+            var $table = $(`<table class='table table-hover table-bordered table-striped'></table>`);
+            var $tr = $("<tr></tr>");
+            for (var i in data[1]) {
+                $tr.append($(`<td>${i}</td>`))
+            }
+            $tr.append($(`<td>操作</td>`))
+            $table.append($tr)
+            for (var i = 0; i < data.length; i++) {
+                var $tr = $("<tr></tr>")
+                for (var j in data[i]) {
+                    $tr.append($(`<td>${data[i][j]}</td>`))
+                }
+                $tr.append($(`<td><a herf='./update'><button onclick='zzz(this)' class='btn btn-warning'>修改</button></a>&nbsp;&nbsp;<button onclick='del(this)' class='btn btn-danger'>删除</button></td>`))
+                // <a onclick='upd(this)' href='./update' ></a>
+                $table.append($tr)
+            }
+            $("#home").append($table)
+        }, "JSON")
+
+        //删除
+        function del(btn) {
+            var id = ($(btn).parents()[1].firstElementChild.innerHTML)
+            $.get("/del", `id=${id}`, () => {
+                location.reload();
+            })
+        }
+        //修改
+        function zzz(btn) {
+            var id = ($(btn).parents()[2].firstElementChild.innerHTML)
+            // console.log(id);
+            sessionStorage["id"]=id;
+            location="./update";
+            // $.get("/zzz", `id=${id}`, () => {
+            //     location = "./update";
+            // })
+        }
+    </script>
+    <script>
+        if (sessionStorage.lenth != 0) {
+            $(".name").html(sessionStorage["name"])
+        }
+    </script>
+</body>
+
+</html>
